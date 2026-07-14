@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python C:\\Users\\YOUR_USERNAME\\.codex\\codex_ring.py permission"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python C:\\Users\\YOUR_USERNAME\\.codex\\codex_ring.py start-error-watcher"
+          }
+        ]
+      }
+    ]
+  }
+}

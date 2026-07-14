@@ -15,7 +15,7 @@ A local sound notification tool for Codex CLI.
 - Watches Codex session logs and plays an error sound for structured error events.
 - Embeds WAV audio as Base64 data, so no external audio file path is required.
 - Uses a background Python process to avoid blocking Codex.
-- Automatically stops the error watcher when no `codex.exe` process is running.
+- Automatically stops the error watcher when there is no recent session log activity (e.g., idle for 30 minutes).
 
 ### Sound Mapping
 
@@ -28,7 +28,7 @@ A local sound notification tool for Codex CLI.
 ### Requirements
 
 - Windows
-- Python 3.10 or later
+- Python 3.10 or later (ensure `python` is added to your system's PATH environment variable)
 - Codex CLI with Hooks support
 
 ### Repository Layout
@@ -74,10 +74,10 @@ The hook configuration uses:
 
 Play the embedded sounds directly:
 
-```powershell
-python "$HOME\.codex\codex_ring.py" play-audio complete
-python "$HOME\.codex\codex_ring.py" play-audio permission
-python "$HOME\.codex\codex_ring.py" play-audio retry
+```cmd
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio complete
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio permission
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio retry
 ```
 
 ### Notes
@@ -98,7 +98,7 @@ python "$HOME\.codex\codex_ring.py" play-audio retry
 - 监听 Codex 会话日志，发现结构化错误事件时播放错误提示音。
 - WAV 音频以 Base64 形式内嵌，不依赖外部音频文件路径。
 - 通过后台 Python 子进程播放，不阻塞 Codex。
-- 当系统中不存在 `codex.exe` 时，错误监听器自动退出。
+- 当会话日志在一段时间内（如 30 分钟）无更新时，错误监听器自动退出。
 
 ### 声音映射
 
@@ -111,7 +111,7 @@ python "$HOME\.codex\codex_ring.py" play-audio retry
 ### 环境要求
 
 - Windows
-- Python 3.10 或更高版本
+- Python 3.10 或更高版本（确保 `python` 已添加到系统环境变量 PATH 中）
 - 支持 Hooks 的 Codex CLI
 
 ### 仓库结构
@@ -155,10 +155,10 @@ codex-sound-notifier/
 
 可以直接播放内嵌音频：
 
-```powershell
-python "$HOME\.codex\codex_ring.py" play-audio complete
-python "$HOME\.codex\codex_ring.py" play-audio permission
-python "$HOME\.codex\codex_ring.py" play-audio retry
+```cmd
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio complete
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio permission
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio retry
 ```
 
 ### 注意事项
