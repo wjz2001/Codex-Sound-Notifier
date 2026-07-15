@@ -5,7 +5,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python C:\\Users\\YOUR_USERNAME\\.codex\\codex_ring.py permission"
+            "command": "python \"C:\\Users\\wjz20\\.codex\\codex_ring.py\" permission",
+            "suppressStatus": true
           }
         ]
       }
@@ -15,7 +16,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python C:\\Users\\YOUR_USERNAME\\.codex\\codex_ring.py start-error-watcher"
+            "command": "python \"C:\\Users\\wjz20\\.codex\\codex_ring.py\" start-error-watcher",
+            "suppressStatus": true
           }
         ]
       }
