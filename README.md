@@ -21,9 +21,9 @@ A local sound notification tool for Codex CLI.
 
 | Event | Sound |
 |---|---|
-| Agent turn completed | Complete sound |
-| Permission request | Permission sound |
-| Session error or retry | Retry sound |
+| Agent turn completed | Stop sound |
+| Permission request | Permissionrequest sound |
+| Session error or retry | SessionStart sound |
 
 ### Requirements
 
@@ -37,8 +37,7 @@ A local sound notification tool for Codex CLI.
 codex-sound-notifier/
 ├── codex_ring.py
 ├── hooks.json
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 `codex_ring.py` and `hooks.json` are stored in the same directory in this repository.
@@ -51,22 +50,29 @@ codex-sound-notifier/
    %USERPROFILE%\.codex\
    ```
 
-2. Replace `YOUR_USERNAME` in `hooks.json` with your Windows user name. Hook commands must use an absolute path because Codex may run from any workspace directory.
+2. Replace `YOUR_USERNAME` in `hooks.json` with your Windows user name. 
+   > **Important**: Hook commands must use an absolute path because Codex may run from any workspace directory. It is highly recommended to use forward slashes (`/`) to avoid JSON/shell escaping errors (e.g., `python C:/Users/YOUR_USERNAME/.codex/codex_ring.py`).
 
-3. Add the following line near the top of `%USERPROFILE%\.codex\config.toml`:
+3. Ensure Hooks are enabled globally. Add the following lines to your `%USERPROFILE%\.codex\config.toml` (if not already present):
 
    ```toml
-   notify = ["python", "C:\\Users\\YOUR_USERNAME\\.codex\\codex_ring.py"]
+   [features]
+   hooks = true
    ```
 
 4. Restart Codex.
 
-5. If Codex asks whether to trust the local hooks, approve the hooks after reviewing the files.
+5. **Permanent Trust Setup**: Because the hooks run external scripts, Codex's security system will intercept them initially. 
+   - Type `/hooks` in the Codex CLI and press Enter.
+   - Review the newly added hooks.
+   - Press `t` (Trust) for each of them. 
+   - *This saves a unique `trusted_hash` in your `config.toml`. As long as you don't change the path or command in `hooks.json`, you will never be asked to approve them again upon restarting.*
 
 ### Hook Configuration
 
-The hook configuration uses:
+The updated hook configuration uses:
 
+- `Stop` for task completion sounds.
 - `PermissionRequest` for permission notification sounds.
 - `SessionStart` to start the structured session-error watcher.
 
@@ -75,14 +81,13 @@ The hook configuration uses:
 Play the embedded sounds directly:
 
 ```cmd
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio complete
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio permission
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio retry
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio stop
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio permissionrequest
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio sessionstart
 ```
 
 ### Notes
 
-- The completion notification uses Codex `notify` with the `agent-turn-complete` event.
 - Error notifications are detected from structured JSONL session records.
 - The project does not approve, reject, or modify any Codex permission request.
 - The bundled audio data increases the size of `codex_ring.py`.
@@ -120,8 +125,7 @@ python "%USERPROFILE%\.codex\codex_ring.py" play-audio retry
 codex-sound-notifier/
 ├── codex_ring.py
 ├── hooks.json
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 仓库中的 `codex_ring.py` 与 `hooks.json` 位于同一目录。
@@ -134,21 +138,30 @@ codex-sound-notifier/
    %USERPROFILE%\.codex\
    ```
 
-2. 将 `hooks.json` 中的 `YOUR_USERNAME` 替换为你的 Windows 用户名。Hook 命令必须使用绝对路径，因为 Codex 可能在任意项目目录中运行。
+2. 将 `hooks.json` 中的 `YOUR_USERNAME` 替换为你的 Windows 用户名。
+   > **重要提示**：Hook 命令必须使用绝对路径，因为 Codex 可能在任意项目目录中运行。强烈建议使用正斜杠（`/`）来防止 JSON 或命令行的路径转义错误（例如：`python C:/Users/你的用户名/.codex/codex_ring.py`）。
 
-3. 在 `%USERPROFILE%\.codex\config.toml` 顶部附近添加：
+3. 确保全局已开启 Hooks 功能。在 `%USERPROFILE%\.codex\config.toml` 中添加以下内容（如果还没有的话）：
 
    ```toml
-   notify = ["python", "C:\\Users\\你的用户名\\.codex\\codex_ring.py"]
+   [features]
+   hooks = true
    ```
 
 4. 重启 Codex。
 
-5. 如果 Codex 首次提示是否信任本地 Hook，请先检查脚本内容，再选择信任。
+5. **配置永久信任（一劳永逸）**：由于 Hook 调用了外部脚本，Codex 处于安全考虑会在初始时拦截。
+   - 在 Codex 交互界面中输入 `/hooks` 并回车。
+   - 检查列表中新增的几个钩子事件。
+   - 对它们分别按下 `t` 键 (Trust) 进行完全信任。
+   - *此操作会在 `config.toml` 中生成唯一的 `trusted_hash`。只要未来不修改 `hooks.json` 里的路径和命令，重启后通知系统将永久自动生效，不再要求审核。*
 
 ### Hook 配置
 
-- `PermissionRequest`：用于权限请求提示音。
+更新后的 Hook 配置包含以下触发器：
+
+- `Stop`：用于触发任务完成提示音。
+- `PermissionRequest`：用于触发权限请求提示音。
 - `SessionStart`：用于启动结构化会话错误监听器。
 
 ### 测试方法
@@ -156,14 +169,13 @@ codex-sound-notifier/
 可以直接播放内嵌音频：
 
 ```cmd
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio complete
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio permission
-python "%USERPROFILE%\.codex\codex_ring.py" play-audio retry
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio stop
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio permissionrequest
+python "%USERPROFILE%\.codex\codex_ring.py" play-audio sessionstart
 ```
 
 ### 注意事项
 
-- 任务完成通知依赖 Codex `notify` 的 `agent-turn-complete` 事件。
 - 错误提示通过解析结构化 JSONL 会话记录实现。
 - 本项目不会自动批准、拒绝或修改任何 Codex 权限请求。
 - 由于内嵌了 Base64 音频，`codex_ring.py` 文件体积会较大。
