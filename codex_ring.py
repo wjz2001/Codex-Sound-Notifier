@@ -216,12 +216,11 @@ def main() -> None:
     try:
         mode = sys.argv[1] if len(sys.argv) > 1 else ""
         
-        # 匹配 Codex 原生 Hook 命名规范
-        if mode == "Stop":
+        if mode == "stop":
             play_sound("stop")
-        elif mode == "PermissionRequest":
+        elif mode == "permissionrequest":
             play_sound("permissionrequest")
-        elif mode == "SessionStart":
+        elif mode == "start-error-watcher":
             start_error_watcher()
             
         # 内部守护进程 / 播放控制
